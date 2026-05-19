@@ -20,11 +20,10 @@
 <body>
 <%- include('../partials/nav') %>
 
-
 <div class="container">
   <h2>Customers</h2>
 
-  <table id="customersTable">
+  <table>
     <thead>
       <tr>
         <th>Name</th>
@@ -32,32 +31,18 @@
         <th>Email</th>
       </tr>
     </thead>
-    <tbody></tbody>
+
+    <tbody>
+      <% customers.forEach(c => { %>
+        <tr>
+          <td><%= c.name %></td>
+          <td><%= c.phone || "-" %></td>
+          <td><%= c.email || "-" %></td>
+        </tr>
+      <% }) %>
+    </tbody>
   </table>
 </div>
 
-<script>
-async function loadCustomers() {
-  const res = await fetch("/api/customers");
-  const customers = await res.json();
-
-  const tbody = document.querySelector("#customersTable tbody");
-  tbody.innerHTML = "";
-
-  customers.forEach(c => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${c.name}</td>
-      <td>${c.phone || "-"}</td>
-      <td>${c.email || "-"}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-loadCustomers();
-</script>
-
 </body>
 </html>
-

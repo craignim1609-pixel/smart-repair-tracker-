@@ -7,8 +7,18 @@ const router = express.Router();
 /* -------------------------------------------------------
    RENDER: NEW JOB FORM
 ------------------------------------------------------- */
-router.get("/new", (req, res) => {
-  res.render("jobs/new");
+router.get("/new", async (req, res, next) => {
+  try {
+    const customers = await pool.query("SELECT id, name FROM customers ORDER BY name ASC");
+    const technicians = await pool.query("SELECT id, name FROM technicians ORDER BY name ASC");
+
+    res.render("jobs/new", {
+      customers: customers.rows,
+      technicians: technicians.rows
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /* -------------------------------------------------------

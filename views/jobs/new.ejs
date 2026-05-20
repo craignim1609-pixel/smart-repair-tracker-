@@ -70,16 +70,35 @@
       <% }) %>
     </select>
 
-    <label>Technician</label>
-    <select name="technician_id" required>
-      <option value="">Select technician</option>
-      <% technicians.forEach(t => { %>
-        <option value="<%= t.id %>"><%= t.name %></option>
-      <% }) %>
+    <label>Item Type</label>
+    <input name="item_type" required>
+
+    <label>Brand</label>
+    <input name="brand">
+
+    <label>Model</label>
+    <input name="model">
+
+    <label>Serial Number</label>
+    <input name="serial_number">
+
+    <label>Fault Reported</label>
+    <textarea name="fault_reported" rows="3" required></textarea>
+
+    <label>Status</label>
+    <select name="status">
+      <option value="booked_in">Booked In</option>
+      <option value="in_progress">In Progress</option>
+      <option value="awaiting_parts">Awaiting Parts</option>
+      <option value="completed">Completed</option>
+      <option value="unrepairable">Unrepairable</option>
     </select>
 
-    <label>Description</label>
-    <textarea name="description" rows="4"></textarea>
+    <label>Is Customer Job?</label>
+    <select name="is_customer_job">
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
 
     <button type="submit">Create Job</button>
   </form>
@@ -94,7 +113,7 @@ document.getElementById("jobForm").onsubmit = async (e) => {
   const formData = new FormData(e.target);
   const body = Object.fromEntries(formData.entries());
 
-  await fetch("/jobs", {
+  await fetch("/jobs/api", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
@@ -110,4 +129,3 @@ document.getElementById("jobForm").onsubmit = async (e) => {
 
 </body>
 </html>
-

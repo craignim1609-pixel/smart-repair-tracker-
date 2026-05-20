@@ -9,17 +9,28 @@ const router = express.Router();
 ------------------------------------------------------- */
 router.get("/new", async (req, res, next) => {
   try {
-    const customers = await pool.query("SELECT id, name FROM customers ORDER BY name ASC");
-    const technicians = await pool.query("SELECT id, name FROM technicians ORDER BY name ASC");
+    const customers = await pool.query(
+      "SELECT id, name FROM customers ORDER BY name ASC"
+    );
+
+    const technicians = await pool.query(
+      `SELECT 
+         id,
+         COALESCE(name, first_name || ' ' || last_name, tech_name) AS name
+       FROM technicians
+       ORDER BY id ASC`
+    );
 
     res.render("jobs/new", {
       customers: customers.rows,
       technicians: technicians.rows
     });
   } catch (err) {
+    console.error("Error loading /jobs/new:", err);
     next(err);
   }
 });
+
 
 /* -------------------------------------------------------
    RENDER: VIEW JOBS PAGE (HTML)

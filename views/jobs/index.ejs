@@ -39,6 +39,14 @@
     tr:hover {
       background: #f0f8ff;
     }
+    a {
+      color: #0078ff;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 
@@ -62,7 +70,11 @@
       <% if (jobs && jobs.length > 0) { %>
         <% jobs.forEach(job => { %>
           <tr>
-            <td><%= job.job_number %></td>
+            <td>
+              <a href="/jobs/<%= job.id %>">
+                <%= job.job_number %>
+              </a>
+            </td>
             <td><%= job.customer_name || "Non‑Customer Job" %></td>
             <td><%= job.item_type %></td>
             <td><%= job.status %></td>

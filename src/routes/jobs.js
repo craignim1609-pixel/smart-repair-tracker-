@@ -1,4 +1,3 @@
-// src/routes/jobs.js
 const express = require("express");
 const pool = require("../db");
 
@@ -14,11 +13,7 @@ router.get("/new", async (req, res, next) => {
     );
 
     const technicians = await pool.query(
-      `SELECT 
-         id,
-         COALESCE(name, first_name || ' ' || last_name, tech_name) AS name
-       FROM technicians
-       ORDER BY id ASC`
+      "SELECT id, name FROM technicians ORDER BY name ASC"
     );
 
     res.render("jobs/new", {
@@ -30,7 +25,6 @@ router.get("/new", async (req, res, next) => {
     next(err);
   }
 });
-
 
 /* -------------------------------------------------------
    RENDER: VIEW JOBS PAGE (HTML)
@@ -66,7 +60,7 @@ router.get("/api/list", async (req, res, next) => {
        ORDER BY j.id DESC`
     );
 
-    res.render("jobs/index", { jobs: result.rows });
+    res.json(result.rows);
   } catch (err) {
     next(err);
   }
@@ -127,8 +121,6 @@ router.post("/api", async (req, res, next) => {
       model,
       serial_number,
       fault_reported,
-      diagnosis,
-      fix_description,
       status,
       is_customer_job
     } = req.body;
@@ -136,8 +128,8 @@ router.post("/api", async (req, res, next) => {
     const result = await pool.query(
       `INSERT INTO jobs
        (job_number, customer_id, item_type, brand, model, serial_number,
-        fault_reported, diagnosis, fix_description, status, is_customer_job)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+        fault_reported, status, is_customer_job)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
        RETURNING *`,
       [
         job_number,
@@ -147,8 +139,6 @@ router.post("/api", async (req, res, next) => {
         model || null,
         serial_number || null,
         fault_reported,
-        diagnosis || null,
-        fix_description || null,
         status || "booked_in",
         is_customer_job ?? true
       ]

@@ -26,6 +26,14 @@ router.get("/new", async (req, res, next) => {
   }
 });
 
+router.get("/:id", async (req, res, next) => {
+  try {
+    res.render("jobs/show", { jobId: req.params.id });
+  } catch (err) {
+    next(err);
+  }
+});
+
 /* -------------------------------------------------------
    RENDER: VIEW JOBS PAGE (HTML)
 ------------------------------------------------------- */

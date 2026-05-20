@@ -26,14 +26,6 @@ router.get("/new", async (req, res, next) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
-  try {
-    res.render("jobs/show", { jobId: req.params.id });
-  } catch (err) {
-    next(err);
-  }
-});
-
 /* -------------------------------------------------------
    RENDER: VIEW JOBS PAGE (HTML)
 ------------------------------------------------------- */
@@ -283,6 +275,18 @@ router.delete("/api/:id/technicians/:techId", async (req, res, next) => {
       req.params.techId
     ]);
     res.json({ message: "Technician removed" });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/* -------------------------------------------------------
+   RENDER: JOB DETAILS PAGE SHELL
+   (must be AFTER /api routes to avoid conflicts)
+------------------------------------------------------- */
+router.get("/:id", async (req, res, next) => {
+  try {
+    res.render("jobs/show", { jobId: req.params.id });
   } catch (err) {
     next(err);
   }

@@ -2,62 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>New Job Booking</title>
+  <title>Add Job</title>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 20px;
+    body { 
+      font-family: Arial, sans-serif; 
+      background: #f5f5f5; 
+      padding: 20px; 
     }
-    .container {
-      max-width: 700px;
-      margin: auto;
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
+    .container { 
+      max-width: 700px; 
+      margin: auto; 
+      background: white; 
+      padding: 25px; 
+      border-radius: 10px; 
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    h2 {
-      margin-top: 0;
-      text-align: center;
+    label { 
+      font-weight: bold; 
+      display: block; 
+      margin-top: 15px; 
     }
-    .form-row {
-      margin-bottom: 15px;
+    input, select, textarea { 
+      width: 100%; 
+      padding: 10px; 
+      border-radius: 6px; 
+      border: 1px solid #ccc; 
+      margin-top: 5px;
     }
-    label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 5px;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #0078ff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 1.1rem;
+    button { 
+      margin-top: 20px; 
+      width: 100%; 
+      padding: 12px; 
+      background: #0078ff; 
+      color: white; 
+      border: none; 
+      border-radius: 6px; 
       cursor: pointer;
-      margin-top: 10px;
     }
-    button:hover {
-      background: #005fcc;
-    }
-    .success {
-      margin-top: 15px;
-      padding: 12px;
-      background: #d4ffd4;
-      border: 1px solid #7ad67a;
-      border-radius: 6px;
-      display: none;
+    #successBox {
+      display:none; 
+      margin-top:15px; 
+      background:#d4ffd4; 
+      padding:10px; 
+      border-radius:6px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -66,118 +55,59 @@
 <%- include('../partials/nav') %>
 
 <div class="container">
-  <h2>Book New Repair Job</h2>
+  <h2>Add Job</h2>
 
   <form id="jobForm">
 
-    <div class="form-row">
-      <label>Job Number</label>
-      <input id="job_number" name="job_number" placeholder="REUSE-2026-001" required>
-      <button type="button" onclick="generateJobNumber()">Generate Job Number</button>
-    </div>
+    <label>Job Number</label>
+    <input name="job_number" required>
 
-    <div class="form-row">
-      <label>Customer</label>
-      <select id="customer_id" name="customer_id">
-        <option value="">Non‑Customer Job</option>
-      </select>
-    </div>
+    <label>Customer</label>
+    <select name="customer_id" required>
+      <option value="">Select customer</option>
+      <% customers.forEach(c => { %>
+        <option value="<%= c.id %>"><%= c.name %></option>
+      <% }) %>
+    </select>
 
-    <div class="form-row">
-      <label>Item Type</label>
-      <input name="item_type" placeholder="e.g. Laptop, Hoover, TV" required>
-    </div>
+    <label>Technician</label>
+    <select name="technician_id" required>
+      <option value="">Select technician</option>
+      <% technicians.forEach(t => { %>
+        <option value="<%= t.id %>"><%= t.name %></option>
+      <% }) %>
+    </select>
 
-    <div class="form-row">
-      <label>Brand</label>
-      <input name="brand" placeholder="e.g. Samsung">
-    </div>
+    <label>Description</label>
+    <textarea name="description" rows="4"></textarea>
 
-    <div class="form-row">
-      <label>Model</label>
-      <input name="model" placeholder="e.g. UE55NU7100">
-    </div>
-
-    <div class="form-row">
-      <label>Serial Number</label>
-      <input name="serial_number" placeholder="Optional">
-    </div>
-
-    <div class="form-row">
-      <label>Fault Reported</label>
-      <textarea name="fault_reported" rows="3" required></textarea>
-    </div>
-
-    <div class="form-row">
-      <label>Status</label>
-      <select name="status">
-        <option value="booked_in">Booked In</option>
-        <option value="in_progress">In Progress</option>
-        <option value="awaiting_parts">Awaiting Parts</option>
-        <option value="completed">Completed</option>
-        <option value="unrepairable">Unrepairable</option>
-      </select>
-    </div>
-
-    <button type="submit">Submit Job</button>
+    <button type="submit">Create Job</button>
   </form>
 
-  <div id="successBox" class="success"></div>
+  <div id="successBox"></div>
 </div>
 
 <script>
-const API = "/api";
-
-// Load customers into dropdown
-async function loadCustomers() {
-  const res = await fetch(`${API}/customers`);
-  const customers = await res.json();
-  const select = document.getElementById("customer_id");
-
-  customers.forEach(c => {
-    const opt = document.createElement("option");
-    opt.value = c.id;
-    opt.textContent = `${c.name} (${c.phone || "no phone"})`;
-    select.appendChild(opt);
-  });
-}
-
-// Auto-generate job number
-function generateJobNumber() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const rand = Math.floor(Math.random() * 900) + 100;
-  document.getElementById("job_number").value = `REUSE-${year}-${rand}`;
-}
-
-// Submit form
 document.getElementById("jobForm").onsubmit = async (e) => {
   e.preventDefault();
 
   const formData = new FormData(e.target);
   const body = Object.fromEntries(formData.entries());
 
-  // Convert empty customer to null + mark non-customer job
-  body.customer_id = body.customer_id || null;
-  body.is_customer_job = body.customer_id ? true : false;
-
-  const res = await fetch(`${API}/jobs`, {
+  await fetch("/jobs", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
   });
 
-  const data = await res.json();
-
   const box = document.getElementById("successBox");
   box.style.display = "block";
-  box.textContent = `Job ${data.job_number} created successfully!`;
+  box.textContent = `Job ${body.job_number} created successfully!`;
 
   e.target.reset();
 };
-
-loadCustomers();
 </script>
 
 </body>
 </html>
+

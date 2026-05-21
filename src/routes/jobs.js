@@ -299,7 +299,7 @@ router.delete("/api/:id/technicians/:techId", async (req, res, next) => {
 
 /* -------------------------------------------------------
    RENDER: JOB DETAILS PAGE SHELL
-   (must be AFTER /api routes to avoid conflicts)
+   MUST BE LAST — prevents route conflicts
 ------------------------------------------------------- */
 router.get("/:id", async (req, res, next) => {
   try {

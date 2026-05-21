@@ -27,6 +27,17 @@ router.get("/new", async (req, res, next) => {
 });
 
 /* -------------------------------------------------------
+   RENDER: JOBS DASHBOARD
+------------------------------------------------------- */
+router.get("/dashboard", async (req, res, next) => {
+  try {
+    res.render("jobs/dashboard");
+  } catch (err) {
+    next(err);
+  }
+});
+
+/* -------------------------------------------------------
    RENDER: VIEW JOBS PAGE (HTML)
 ------------------------------------------------------- */
 router.get("/", async (req, res, next) => {

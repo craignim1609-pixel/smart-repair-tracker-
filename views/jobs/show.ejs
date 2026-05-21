@@ -24,7 +24,16 @@
 async function loadJob() {
   const jobId = "<%= jobId %>";
   const res = await fetch(`/jobs/api/${jobId}`);
-  const data = await res.json();
+
+if (!res.ok) {
+  const text = await res.text();
+  document.getElementById("jobContainer").innerHTML =
+    "<pre style='color:red'>" + text + "</pre>";
+  return;
+}
+
+const data = await res.json();
+
 
   const job = data.job;
   const parts = data.parts;

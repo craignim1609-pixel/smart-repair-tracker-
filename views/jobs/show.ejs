@@ -29,6 +29,7 @@ async function loadJob() {
   const job = data.job;
   const parts = data.parts;
   const techs = data.technicians;
+  const allTechs = data.allTechnicians;
 
   document.getElementById("jobContainer").innerHTML = `
     <div class="section">
@@ -99,7 +100,7 @@ async function loadJob() {
 
       <h3>Add Technician Time</h3>
       <select id="techSelect">
-        ${techs.map(t => `<option value="${t.id}">${t.name}</option>`).join("")}
+        ${allTechs.map(t => `<option value="${t.id}">${t.name}</option>`).join("")}
       </select>
       <input id="minutes" placeholder="Minutes worked">
       <button onclick="addTech()">Add Time</button>
@@ -119,7 +120,7 @@ async function updateField(field, value) {
 
 async function addPart() {
   const jobId = "<%= jobId %>";
-  await fetch(`/jobs/api/${jobId}/parts`, {
+  const res = await fetch(`/jobs/api/${jobId}/parts`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -127,6 +128,7 @@ async function addPart() {
       part_cost: document.getElementById("partCost").value
     })
   });
+
   loadJob();
 }
 
@@ -146,6 +148,7 @@ async function addTech() {
       minutes_worked: document.getElementById("minutes").value
     })
   });
+
   loadJob();
 }
 

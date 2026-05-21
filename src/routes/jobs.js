@@ -109,10 +109,16 @@ router.get("/api/:id", async (req, res, next) => {
       [jobId]
     );
 
+    // ⭐ FIX: Return full technician list
+    const allTechnicians = await pool.query(
+      "SELECT id, name FROM technicians ORDER BY name ASC"
+    );
+
     res.json({
       job: job.rows[0],
       parts: parts.rows,
-      technicians: technicians.rows
+      technicians: technicians.rows,
+      allTechnicians: allTechnicians.rows
     });
   } catch (err) {
     next(err);

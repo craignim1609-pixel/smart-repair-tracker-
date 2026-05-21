@@ -216,7 +216,7 @@ router.post("/api/:id/parts", async (req, res, next) => {
     const { part_name, part_cost } = req.body;
 
     const result = await pool.query(
-      `INSERT INTO job_parts (job_id, part_name, part_cost)
+      `INSERT INTO job_parts (job_id, part_name, cost)
        VALUES ($1, $2, $3)
        RETURNING *`,
       [req.params.id, part_name, part_cost]
@@ -224,9 +224,11 @@ router.post("/api/:id/parts", async (req, res, next) => {
 
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    next(err);
+    console.error("ADD PART ERROR:", err);
+    res.status(500).send(err.message);
   }
 });
+
 
 /* -------------------------------------------------------
    API: REMOVE PART FROM JOB
